@@ -265,9 +265,9 @@ def build_default_timeline(dataset_size: int) -> list[TimelineMilestone]:
         ("dataset_3x", "3× dataset", "dataset_multiple", 3.0, 3.0),
         ("dataset_4x", "4× dataset", "dataset_multiple", 4.0, 4.0),
         ("dataset_5x", "5× dataset", "dataset_multiple", 5.0, 5.0),
-        # ("dataset_6_5x", "6.5× dataset", "dataset_multiple", 6.5, 6.5),
-        # ("dataset_8_5x", "8.5× dataset", "dataset_multiple", 8.5, 8.5),
-        # ("dataset_10x", "10× dataset", "dataset_multiple", 10.0, 10.0),
+        ("dataset_6_5x", "6.5× dataset", "dataset_multiple", 6.5, 6.5),
+        ("dataset_8_5x", "8.5× dataset", "dataset_multiple", 8.5, 8.5),
+        ("dataset_10x", "10× dataset", "dataset_multiple", 10.0, 10.0),
         # ("dataset_12_5x", "12.5× dataset", "dataset_multiple", 12.5, 12.5),
         # ("dataset_15x", "15× dataset", "dataset_multiple", 15.0, 15.0),
         # ("dataset_17_5x", "17.5× dataset", "dataset_multiple", 17.5, 17.5),
@@ -482,17 +482,11 @@ def main() -> None:
         training_complete = milestone_index >= len(milestones)
         topo_loss = TopoLoss(
             losses=[
-                # PowerSpectrum.from_layer(
-                #     model=model,
-                #     layer=model.net[0],
-                #     scale=5.0,
-                #     freq_cutoff=3
-                # )
                 LaplacianPyramid.from_layer(
                     model=model,
                     layer=model.net[0],
-                    factor_h=5,
-                    factor_w=5,
+                    factor_h=7,
+                    factor_w=7,
                     scale=5.0,
                 )
             ]
