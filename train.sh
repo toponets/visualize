@@ -1,1 +1,1 @@
-python training/mlp_train.py --epochs 3 --hidden-dims 256 --device mps
+python training/mlp_train.py --epochs 10 --hidden-dims 256 --device mps
