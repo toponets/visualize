@@ -1,0 +1,127 @@
+{
+  "version": 2,
+  "dtype": "float16",
+  "weights": {
+    "storage": "per_snapshot_files",
+    "format": "layer_array_v1",
+    "precision": "float16"
+  },
+  "network": {
+    "architecture": [
+      784,
+      256,
+      256,
+      10
+    ],
+    "layers": [
+      {
+        "layer_index": 0,
+        "type": "dense",
+        "name": "dense_0",
+        "activation": "relu",
+        "weight_shape": [
+          256,
+          784
+        ],
+        "bias_shape": [
+          256
+        ]
+      },
+      {
+        "layer_index": 1,
+        "type": "dense",
+        "name": "dense_1",
+        "activation": "relu",
+        "weight_shape": [
+          256,
+          256
+        ],
+        "bias_shape": [
+          256
+        ]
+      },
+      {
+        "layer_index": 2,
+        "type": "dense",
+        "name": "dense_2",
+        "activation": "linear",
+        "weight_shape": [
+          10,
+          256
+        ],
+        "bias_shape": [
+          10
+        ]
+      }
+    ],
+    "input_dim": 784,
+    "output_dim": 10,
+    "normalization": {
+      "mean": 0.1307,
+      "std": 0.3081
+    }
+  },
+  "timeline": [
+    {
+      "id": "initial",
+      "order": 0,
+      "label": "Initial weights",
+      "kind": "initial",
+      "target_images": 0,
+      "images_seen": 0,
+      "batches_seen": 0,
+      "dataset_passes": 0.0,
+      "description": "0 images processed (random initialisation)",
+      "metrics": {
+        "test_accuracy": 0.0995
+      },
+      "weights": {
+        "path": "mlp_weights/000_initial.json",
+        "dtype": "float16",
+        "format": "layer_array_v1"
+      }
+    },
+    {
+      "id": "dataset_1x",
+      "order": 1,
+      "label": "1x dataset",
+      "kind": "dataset_multiple",
+      "target_images": 60000,
+      "images_seen": 60000,
+      "batches_seen": 469,
+      "dataset_passes": 1.0,
+      "description": "60,000 images \u2022 1\u00d7 dataset \u2022 469 batches",
+      "metrics": {
+        "test_accuracy": 0.942,
+        "avg_training_loss": 1.0929357188224793
+      },
+      "weights": {
+        "path": "mlp_weights/001_dataset-1x.json",
+        "dtype": "float16",
+        "format": "layer_array_v1"
+      },
+      "dataset_multiple": 1.0
+    },
+    {
+      "id": "dataset_5x",
+      "order": 2,
+      "label": "5x dataset",
+      "kind": "dataset_multiple",
+      "target_images": 300000,
+      "images_seen": 300000,
+      "batches_seen": 2345,
+      "dataset_passes": 5.0,
+      "description": "300,000 images \u2022 5\u00d7 dataset \u2022 2,345 batches",
+      "metrics": {
+        "test_accuracy": 0.9663,
+        "avg_training_loss": 0.37932893296082815
+      },
+      "weights": {
+        "path": "mlp_weights/002_dataset-5x.json",
+        "dtype": "float16",
+        "format": "layer_array_v1"
+      },
+      "dataset_multiple": 5.0
+    }
+  ]
+}

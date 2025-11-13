@@ -5,5 +5,5 @@ data/MNIST/
 tools/mnist_assets/__pycache__/
 .DS_Store
 training/__pycache__/
-exports/
+# exports/
 data/
