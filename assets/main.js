@@ -3,9 +3,9 @@ const VISUALIZER_CONFIG = {
   maxConnectionsPerNeuron: 24,
   layerSpacing: 5.5,
   inputSpacing: 0.24,
-  hiddenSpacing: 0.95,
+  hiddenSpacing: 0.45,
   inputNodeSize: 0.18,
-  hiddenNodeRadius: 0.22,
+  hiddenNodeRadius: 0.25,
   connectionRadius: 0.005,
   connectionWeightThreshold: 0,
   showFpsOverlay: true,
@@ -2066,8 +2066,11 @@ class NeuralVisualizer {
     const data = this.collectSelectionConnectionData();
     this.selectionConnectionData = data;
     const baseGeometry = this.ensureSelectionGeometry();
+    // Set transparent and lower opacity for selected connection lines
     const connectionMaterial = new THREE.MeshBasicMaterial({
       toneMapped: false,
+      transparent: true,
+      opacity: 0.35,
     });
 
     const createMesh = (connections) => {
@@ -2243,7 +2246,7 @@ class NeuralVisualizer {
       blending: THREE.AdditiveBlending,
       depthWrite: false,
       depthTest: true,
-      opacity: 0.95,
+      opacity: 0.15,
       toneMapped: false,
       color: 0x4da6ff,
     });
@@ -2511,16 +2514,27 @@ class NeuralVisualizer {
   computeLayerPositions(layerIndex, neuronCount, layerX) {
     const positions = [];
     const isOutputLayer = layerIndex === this.mlp.architecture.length - 1;
+
+    // Helper to find grid dimensions similar to find_cortical_sheet_size
+    function findGridDims(area) {
+      let length = Math.floor(Math.sqrt(area));
+      while (length > 1 && area % length !== 0) {
+        length -= 1;
+      }
+      const breadth = Math.floor(area / length);
+      return { width: breadth, height: length };
+    }
+
     if (layerIndex === 0) {
       const spacing = this.options.inputSpacing;
-      let rows;
-      let cols;
+      let rows, cols;
       if (neuronCount === 28 * 28) {
         rows = 28;
         cols = 28;
       } else {
-        cols = Math.ceil(Math.sqrt(neuronCount));
-        rows = Math.ceil(neuronCount / cols);
+        const dims = findGridDims(neuronCount);
+        cols = dims.width;
+        rows = dims.height;
       }
       const height = (rows - 1) * spacing;
       const width = (cols - 1) * spacing;
@@ -2542,16 +2556,19 @@ class NeuralVisualizer {
       }
     } else {
       const spacing = this.options.hiddenSpacing;
-      const cols = Math.max(1, Math.ceil(Math.sqrt(neuronCount)));
-      const rows = Math.ceil(neuronCount / cols);
+      const dims = findGridDims(neuronCount);
+      const cols = dims.width;
+      const rows = dims.height;
       const height = (rows - 1) * spacing;
       const width = (cols - 1) * spacing;
-      for (let index = 0; index < neuronCount; index += 1) {
-        const row = Math.floor(index / cols);
-        const col = index % cols;
-        const y = height / 2 - row * spacing;
-        const z = -width / 2 + col * spacing;
-        positions.push(new THREE.Vector3(layerX, y, z));
+      let filled = 0;
+      for (let row = 0; row < rows && filled < neuronCount; row += 1) {
+        for (let col = 0; col < cols && filled < neuronCount; col += 1) {
+          const y = height / 2 - row * spacing;
+          const z = -width / 2 + col * spacing;
+          positions.push(new THREE.Vector3(layerX, y, z));
+          filled += 1;
+        }
       }
     }
     return positions;
@@ -2627,8 +2644,11 @@ class NeuralVisualizer {
     this.maxConnectionWeightMagnitude = 0;
     const connectionRadius = this.options.connectionRadius ?? 0.005;
     const baseGeometry = new THREE.CylinderGeometry(connectionRadius, connectionRadius, 1, 10, 1, true);
-    const material = new THREE.MeshLambertMaterial();
-    // Do not set vertexColors explicitly; instancing color works independently
+    // Set transparent and lower opacity for connection lines
+    const material = new THREE.MeshLambertMaterial({
+      transparent: true,
+      opacity: 0.35,
+    });
 
     this.mlp.layers.forEach((layer, layerIndex) => {
       const { selected, maxAbsWeight } = this.findImportantConnections(layer);
