@@ -385,6 +385,18 @@ def main() -> None:
         action="store_true",
         help="Skip training and just export the randomly initialised weights.",
     )
+    parser.add_argument(
+        "--tau",
+        type=float,
+        default=10.0,
+        help="Tau parameter for topological loss scaling.",
+    )
+    parser.add_argument(
+        "--downsample-factor",
+        type=int,
+        default=3,
+        help="Downsampling factor for topological loss computation.",
+    )
     args = parser.parse_args()
 
     device = resolve_device(args.device)
@@ -498,16 +510,16 @@ def main() -> None:
                 LaplacianPyramid.from_layer(
                     model=model,
                     layer=model.net[0],
-                    factor_h=5,
-                    factor_w=5,
-                    scale=5.0,
+                    factor_h=args.downsample_factor,
+                    factor_w=args.downsample_factor,
+                    scale=args.tau,
                 ),
                 LaplacianPyramid.from_layer(
                     model=model,
                     layer=model.net[2],
-                    factor_h=5,
-                    factor_w=5,
-                    scale=5.0,
+                    factor_h=args.downsample_factor,
+                    factor_w=args.downsample_factor,
+                    scale=args.tau,
                 ),
             ]
         )
