@@ -1747,24 +1747,24 @@ class NeuronDetailPanel {
 
     this.root.innerHTML = `
       <div class="neuron-detail-panel__inner">
-        <div class="neuron-detail-panel__header">
-          <div class="neuron-detail-panel__title">${payload.layerLabel} • Neuron ${payload.neuronIndex + 1}${
-            payload.activationName ? ` (${payload.activationName})` : ""
-          }</div>
-          <button type="button" class="neuron-detail-panel__close">Auswahl aufheben</button>
+      <div class="neuron-detail-panel__header">
+        <div class="neuron-detail-panel__title">${payload.layerLabel} • Neuron ${payload.neuronIndex + 1}${
+        payload.activationName ? ` (${payload.activationName})` : ""
+        }</div>
+        <button type="button" class="neuron-detail-panel__close">Clear selection</button>
+      </div>
+      <div class="neuron-detail-panel__body">
+        <div class="neuron-detail-panel__summary">
+        ${summaryFormula ? `<div>${summaryFormula}</div>` : ""}
         </div>
-        <div class="neuron-detail-panel__body">
-          <div class="neuron-detail-panel__summary">
-            ${summaryFormula ? `<div>${summaryFormula}</div>` : ""}
-          </div>
-          ${totalsBlock}
-          <div class="neuron-detail-panel__activations">
-            <span>Eingangsschicht-Größe: ${payload.previousLayerSize ?? "—"}</span>
-            <span>Ausgangsschicht-Größe: ${payload.nextLayerSize ?? "—"}</span>
-          </div>
-          ${incomingSection}
-          ${outgoingSection}
+        ${totalsBlock}
+        <div class="neuron-detail-panel__activations">
+        <span>Input layer size: ${payload.previousLayerSize ?? "—"}</span>
+        <span>Output layer size: ${payload.nextLayerSize ?? "—"}</span>
         </div>
+        ${incomingSection}
+        ${outgoingSection}
+      </div>
       </div>
     `;
 
@@ -2426,12 +2426,12 @@ class NeuralVisualizer {
 
   describeLayer(layerIndex) {
     if (layerIndex === 0) {
-      return `Eingabeschicht (${this.mlp.architecture[layerIndex]} Knoten)`;
+      return `Input Layer (${this.mlp.architecture[layerIndex]} nodes)`;
     }
     if (layerIndex === this.mlp.architecture.length - 1) {
-      return `Ausgabeschicht (${this.mlp.architecture[layerIndex]} Knoten)`;
+      return `Output Layer (${this.mlp.architecture[layerIndex]} nodes)`;
     }
-    return `Verborgene Schicht ${layerIndex} (${this.mlp.architecture[layerIndex]} Knoten)`;
+    return `Hidden Layer ${layerIndex} (${this.mlp.architecture[layerIndex]} nodes)`;
   }
 
   getActivationName(layerIndex) {
